@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Environment files (never commit)
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# Build output
+dist/
+build/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Test/cache
+coverage/
+.nyc_output/
+.cache/
+
+# Local notion config (per-user)
+.bumba/
+notion-config.local.json
+workspace-mapping.json
+workspace-mapping.json.json

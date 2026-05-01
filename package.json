@@ -1,0 +1,60 @@
+{
+  "name": "bumba-notion-pm",
+  "version": "0.1.0",
+  "description": "Bumba Notion PM — Node.js primitives for project management integrations with Notion: rate-limited HTTP client, page/database publisher, GitHub↔Notion sync bridge, and CLI.",
+  "main": "src/index.js",
+  "bin": {
+    "bumba-notion-pm": "bin/bumba-notion-pm.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\" \"examples/**/*.js\"",
+    "format:check": "prettier --check \"src/**/*.js\" \"test/**/*.js\" \"examples/**/*.js\"",
+    "example:verify": "node examples/01-verify-connection.js",
+    "example:page": "node examples/02-create-page.js",
+    "example:db": "node examples/03-create-database.js",
+    "example:sync": "node examples/04-github-sync.js"
+  },
+  "keywords": [
+    "notion",
+    "notion-api",
+    "github",
+    "github-sync",
+    "issue-sync",
+    "project-management",
+    "automation",
+    "cli"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a2z2k26/bumba-notion-pm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/a2z2k26/bumba-notion-pm/issues"
+  },
+  "homepage": "https://github.com/a2z2k26/bumba-notion-pm#readme",
+  "dependencies": {
+    "@notionhq/client": "^2.2.0",
+    "@octokit/rest": "^20.0.0",
+    "commander": "^11.0.0",
+    "dotenv": "^16.0.0",
+    "inquirer": "^8.2.0"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "prettier": "^3.0.0"
+  }
+}
