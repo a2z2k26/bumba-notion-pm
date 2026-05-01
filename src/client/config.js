@@ -19,6 +19,9 @@ function validateConfig(env = process.env) {
     githubToken: env.GITHUB_TOKEN || '',
     githubRepo: env.GITHUB_REPO || '',
     notionTasksDatabaseId: env.NOTION_TASKS_DATABASE_ID || '',
+    notionMcpEnabled: parseBool(env.NOTION_MCP_ENABLED),
+    notionMcpServerUrl: env.NOTION_MCP_SERVER_URL || '',
+    notionMcpSocket: env.NOTION_MCP_SOCKET || '',
     debug: parseBool(env.NOTION_DEBUG)
   };
 

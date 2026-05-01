@@ -8,6 +8,7 @@ Each example is a runnable Node script. Copy `.env.example` to `.env` and fill i
 | [`02-create-page.js`](./02-create-page.js) | Create a page with mixed block types |
 | [`03-create-database.js`](./03-create-database.js) | Create a built-in PM database (Tasks/Sprints/Epics/Projects) |
 | [`04-github-sync.js`](./04-github-sync.js) | Pull GitHub issues into a Notion tasks database |
+| [`05-mcp-bridge.js`](./05-mcp-bridge.js) | Optional MCP routing with API fallback |
 
 Run any of them:
 

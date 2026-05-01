@@ -42,6 +42,15 @@
 - **Block factory**: `heading`, `paragraph`, `bulletList`, `todoList`, `callout`, `code` — readable, composable, no manual JSON.
 - **Single-command database creation**: `bumba-notion-pm create-db -k tasks -t "My Tasks"`.
 
+---
+
+### 🟠 Optional MCP routing ###
+
+- **Bring your own MCP server**: drop in a Notion MCP server and Bumba will auto-detect and route through it.
+- **Detection across transports**: HTTP, IPC socket, Claude Desktop config, or explicit env.
+- **Graceful fallback**: if MCP isn't there or fails mid-call, the bridge transparently falls back to the direct Notion API. Zero MCP infrastructure required to use the library.
+- **Three modes**: `auto` (default), `mcp-only` (strict), `api-only` (skip detection).
+
 <br>
 
 ### 🏁 What's in the box ###
@@ -51,8 +60,9 @@
 | **`NotionClient`** | Rate-limited HTTP client with retry and typed errors |
 | **`NotionPublisher`** | Page + database publisher with block factory and PM schemas |
 | **`GitHubIssueBridge`** | Bidirectional GitHub Issues ↔ Notion sync |
+| **`NotionMCPBridge`** | Optional MCP routing with API fallback |
 | **`runWizard`** | Interactive setup wizard |
-| **CLI** | `init`, `verify`, `create-db`, `sync`, `config` |
+| **CLI** | `init`, `verify`, `create-db`, `sync`, `mcp-status`, `config` |
 
 <br>
 
@@ -252,6 +262,7 @@ node examples/01-verify-connection.js   # verify NOTION_API_KEY
 node examples/02-create-page.js         # create a page with mixed blocks
 node examples/03-create-database.js     # create a Tasks database
 node examples/04-github-sync.js         # pull GitHub issues into Notion
+node examples/05-mcp-bridge.js          # use MCP routing (with API fallback)
 ```
 
 <br>

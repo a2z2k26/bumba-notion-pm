@@ -7,6 +7,11 @@ const {
   NotionClient,
   NotionPublisher,
   GitHubIssueBridge,
+  NotionMCPBridge,
+  MCPDetector,
+  getDetector,
+  HttpTransport,
+  NoopTransport,
   blocks,
   schemas,
   validateConfig,
@@ -208,6 +213,100 @@ bridge.syncAll(options?)
 | `Labels` | `multi_select` | Optional, mirrors GitHub labels |
 
 The `TASKS` schema satisfies all of these.
+
+---
+
+## NotionMCPBridge
+
+Optional adapter that routes Notion operations through a Notion MCP server when one is available, with automatic fallback to the direct Notion API. Same method shape as `NotionClient` — drop-in replacement for callers that want MCP routing.
+
+### Constructor
+
+```javascript
+new NotionMCPBridge({
+  apiClient,        // required, a NotionClient instance for fallback
+  mode,             // 'auto' (default) | 'mcp-only' | 'api-only'
+  detector,         // optional, override the MCPDetector
+  transport         // optional, pre-built transport (skips auto-build)
+})
+```
+
+### Modes
+
+| Mode | Behavior |
+|---|---|
+| `auto` (default) | Try MCP, fall back to API on detection or transport failure |
+| `mcp-only` | Require MCP. Throws on init if unavailable; throws on transport error |
+| `api-only` | Skip detection, route everything through `apiClient` |
+
+### Methods
+
+```javascript
+await bridge.initialize({ force? });   // detect + build transport
+const result = await bridge.invoke('pages.create', { ... });
+await bridge.refresh();                // force re-detection
+bridge.status();                       // { mode, activeRoute, mcpAvailable, initialized }
+await bridge.close();
+```
+
+The bridge mirrors the full `@notionhq/client` shape:
+
+```javascript
+bridge.pages.{create,retrieve,update}
+bridge.databases.{create,retrieve,query,update}
+bridge.blocks.{retrieve,update,delete}
+bridge.blocks.children.{list,append}
+bridge.users.{list,me,retrieve}
+bridge.search()
+```
+
+### Events
+
+```javascript
+bridge.on('ready', (status) => { ... });           // initialize() resolved
+bridge.on('fallback', ({ operation, error }) => {  // mcp call failed → api
+  ...
+});
+```
+
+### Detection
+
+`MCPDetector` probes (in order):
+
+1. **HTTP** — `${NOTION_MCP_SERVER_URL}/health`, defaults to `http://localhost:3000`
+2. **IPC socket** — `NOTION_MCP_SOCKET`, `/tmp/notion-mcp.sock`, `~/.notion-mcp/socket`
+3. **Claude Desktop config** — `~/Library/Application Support/Claude/mcp.json` and similar
+4. **Explicit env** — `NOTION_MCP_ENABLED=true` with `NOTION_MCP_SERVER_URL` or `NOTION_MCP_COMMAND`
+
+Results cached for 30s by default; `bridge.refresh()` or `detector.clearCache()` to bust.
+
+### HttpTransport wire protocol
+
+The bundled `HttpTransport` calls `POST {baseUrl}/invoke`:
+
+```http
+POST /invoke
+Content-Type: application/json
+
+{ "operation": "pages.create", "params": { ... } }
+```
+
+Expected response:
+
+```json
+{ "ok": true,  "result": { ... } }
+{ "ok": false, "error": { "code": "...", "message": "..." } }
+```
+
+If your MCP server uses a different protocol, supply a custom transport:
+
+```javascript
+const transport = {
+  async invoke(operation, params) { /* talk to your server */ },
+  async close() {}
+};
+const bridge = new NotionMCPBridge({ apiClient, transport });
+```
 
 ---
 

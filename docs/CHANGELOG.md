@@ -4,6 +4,15 @@ All notable changes to this project are documented here. Format follows [Keep a 
 
 ## [Unreleased]
 
+### Added
+
+- `NotionMCPBridge` — optional adapter that routes Notion operations through an MCP server when available, with automatic fallback to direct API
+- `MCPDetector` — discovers Notion MCP servers via HTTP, IPC socket, Claude Desktop config, or explicit env
+- `HttpTransport` — JSON-over-HTTP transport for MCP servers
+- `bumba-notion-pm mcp-status` CLI subcommand
+- New example `examples/05-mcp-bridge.js`
+- 26 new tests for the MCP module (detector, transports, bridge)
+
 ## [0.1.0] - 2026-05-01
 
 ### Added

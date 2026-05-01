@@ -8,6 +8,8 @@ const fs = require('fs');
 const { NotionClient } = require('../client/notion-client');
 const { NotionPublisher } = require('../publisher/notion-publisher');
 const { GitHubIssueBridge } = require('../sync/issue-bridge');
+const { NotionMCPBridge } = require('../mcp/bridge');
+const { getDetector } = require('../mcp/detector');
 const { validateConfig } = require('../client/config');
 const { runWizard } = require('../setup/wizard');
 const { logger } = require('../utils/logger');
@@ -91,6 +93,36 @@ function buildProgram() {
       const result = await bridge.syncAll();
       console.log('Sync complete:');
       console.log(JSON.stringify(result, null, 2));
+    });
+
+  program
+    .command('mcp-status')
+    .description('Detect Notion MCP server availability and report routing')
+    .option('--mode <mode>', 'auto | mcp-only | api-only', 'auto')
+    .action(async (opts) => {
+      loadEnvFile();
+      const detector = getDetector();
+      detector.clearCache();
+      const detection = await detector.detect({ force: true });
+      console.log('Detection:');
+      console.log(JSON.stringify(detection, null, 2));
+
+      if (!detection.available && opts.mode !== 'mcp-only') {
+        console.log('\nBridge would route via: API (direct)');
+        return;
+      }
+
+      try {
+        const apiClient = new NotionClient();
+        const bridge = new NotionMCPBridge({ apiClient, mode: opts.mode });
+        await bridge.initialize({ force: true });
+        console.log('\nBridge status:');
+        console.log(JSON.stringify(bridge.status(), null, 2));
+        await bridge.close();
+      } catch (err) {
+        console.error(`\n❌  Bridge initialization failed: ${err.message}`);
+        process.exit(2);
+      }
     });
 
   program

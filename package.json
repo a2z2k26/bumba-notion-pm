@@ -22,7 +22,8 @@
     "example:verify": "node examples/01-verify-connection.js",
     "example:page": "node examples/02-create-page.js",
     "example:db": "node examples/03-create-database.js",
-    "example:sync": "node examples/04-github-sync.js"
+    "example:sync": "node examples/04-github-sync.js",
+    "example:mcp": "node examples/05-mcp-bridge.js"
   },
   "keywords": [
     "notion",
