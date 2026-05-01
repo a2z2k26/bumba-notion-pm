@@ -66,7 +66,7 @@ describe('NotionClient method delegation', () => {
     };
     Client.mockImplementation(() => mockSDK);
     client = new NotionClient({
-      apiKey: 'secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      apiKey: 'secret_TEST_PLACEHOLDER_NOT_A_REAL_TOKEN_xxxxx',
       minIntervalMs: 0,
       maxRetries: 1
     });
@@ -104,7 +104,7 @@ describe('NotionClient error normalization', () => {
       search: jest.fn()
     }));
     const client = new NotionClient({
-      apiKey: 'secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      apiKey: 'secret_TEST_PLACEHOLDER_NOT_A_REAL_TOKEN_xxxxx',
       minIntervalMs: 0,
       maxRetries: 1
     });
@@ -120,7 +120,7 @@ describe('NotionClient error normalization', () => {
       search: jest.fn()
     }));
     const client = new NotionClient({
-      apiKey: 'secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      apiKey: 'secret_TEST_PLACEHOLDER_NOT_A_REAL_TOKEN_xxxxx',
       minIntervalMs: 0,
       maxRetries: 1,
       baseDelayMs: 1
@@ -137,7 +137,7 @@ describe('NotionClient error normalization', () => {
       search: jest.fn()
     }));
     const client = new NotionClient({
-      apiKey: 'secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      apiKey: 'secret_TEST_PLACEHOLDER_NOT_A_REAL_TOKEN_xxxxx',
       minIntervalMs: 0,
       maxRetries: 1
     });
