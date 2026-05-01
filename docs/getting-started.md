@@ -113,4 +113,4 @@ This pulls all open and recently-closed issues from the repo into your Notion da
 
 - [`api.md`](./api.md) — Full API reference
 - [`../examples/`](../examples/) — More worked examples
-- [`../CONTRIBUTING.md`](../CONTRIBUTING.md) — Contribute back
+- [`CONTRIBUTING.md`](./CONTRIBUTING.md) — Contribute back
