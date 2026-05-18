@@ -13,32 +13,32 @@
 
 <br>
 
-### Sync issues both ways. GitHub ↔ Notion. Bumba Notion PM is a Node.js library that makes a Notion database the project management surface for any GitHub repository — with real bidirectional sync, rate-limited Notion API plumbing, and a CLI to wire it up in minutes. Issues created in GitHub appear in Notion. Tasks created in Notion appear in GitHub. Status, labels, assignees, links — all synchronized. ###
+### Sync issues both ways. GitHub ↔ Notion. Bumba Notion PM is a Node.js library for using a Notion database as a project management surface for GitHub repositories. It includes bidirectional issue sync, rate-limited Notion API helpers, built-in PM database schemas, and a CLI for setup and common workflows. ###
 
 ---
 
-### 🔴 Bidirectional sync, no compromises ###
+### 🔴 Bidirectional sync, practical guardrails ###
 
 - **GitHub → Notion**: Open and recently-closed issues become Notion pages with status, labels, and a back-link to the issue.
 - **Notion → GitHub**: Tasks created in Notion get filed as GitHub issues. The Notion page is updated with the new issue number and URL.
-- **Round-trip safe**: Once linked, a row's `GitHub Number` is the stable identity. Edit on either side; sync reconciles.
+- **Round-trip identity**: Once linked, a row's `GitHub Number` is used as the stable identity for future syncs.
 - **Three modes**: `bidirectional` (default), `github-to-notion`, `notion-to-github` — switch per-run.
 
 ---
 
-### 🟡 Built for the Notion API, not against it ###
+### 🟡 Built around the Notion API ###
 
-- **Rate-limited HTTP client** sized to Notion's 3 req/s budget — never get 429'd in a hot loop again.
+- **Rate-limited HTTP client** sized around Notion's documented request budget to reduce accidental 429s.
 - **Exponential backoff with jitter** on transient errors. Honors `Retry-After` when present.
 - **Typed errors**: `AuthError`, `RateLimitError`, `NotFoundError`, `ValidationError` — `instanceof` your way out of guesswork.
-- **Drop-in @notionhq/client shape** — every method the official SDK exposes, but rate-limited.
+- **Familiar @notionhq/client shape** — common SDK surfaces wrapped with rate limiting and retry behavior.
 
 ---
 
-### 🟢 Zero-friction onboarding ###
+### 🟢 Lower-friction onboarding ###
 
-- **Interactive setup wizard**: `npx bumba-notion-pm init` walks new users through token, parent page, and connection verification in under 2 minutes.
-- **Built-in PM schemas**: Tasks, Sprints, Epics, and Projects databases ready to spin up — no Notion-side hand-crafting.
+- **Interactive setup wizard**: `npx bumba-notion-pm init` walks through token, parent page, and connection verification.
+- **Built-in PM schemas**: Tasks, Sprints, Epics, and Projects database templates are available when you want a quick starting point.
 - **Block factory**: `heading`, `paragraph`, `bulletList`, `todoList`, `callout`, `code` — readable, composable, no manual JSON.
 - **Single-command database creation**: `bumba-notion-pm create-db -k tasks -t "My Tasks"`.
 
@@ -48,7 +48,7 @@
 
 - **Bring your own MCP server**: drop in a Notion MCP server and Bumba will auto-detect and route through it.
 - **Detection across transports**: HTTP, IPC socket, Claude Desktop config, or explicit env.
-- **Graceful fallback**: if MCP isn't there or fails mid-call, the bridge transparently falls back to the direct Notion API. Zero MCP infrastructure required to use the library.
+- **Graceful fallback**: if MCP isn't configured or fails mid-call, the bridge can fall back to the direct Notion API. No MCP infrastructure is required to use the library.
 - **Three modes**: `auto` (default), `mcp-only` (strict), `api-only` (skip detection).
 
 <br>
@@ -159,7 +159,7 @@ npx bumba-notion-pm sync -r owner/name -d <database-id>
 npx bumba-notion-pm create-db -k tasks -t "Engineering Tasks"
 ```
 
-The database ships with `Status`, `Priority`, `Assignee`, `Due Date`, `GitHub Issue`, `GitHub Number`, `Labels`, and `Last Synced` — all the columns the bridge needs, no manual configuration.
+The database ships with `Status`, `Priority`, `Assignee`, `Due Date`, `GitHub Issue`, `GitHub Number`, `Labels`, and `Last Synced` — the core columns the bridge expects.
 
 <br>
 
@@ -195,14 +195,14 @@ console.log(page.url);
 
 <br>
 
-### 🟡 Rate-limited Notion calls (handled for you) ###
+### 🟡 Rate-limited Notion calls ###
 
 ```javascript
 const { NotionClient } = require('bumba-notion-pm');
 
 const client = new NotionClient();  // reads NOTION_API_KEY
 
-// Drop-in replacement for @notionhq/client. Every call goes through the limiter.
+// Familiar @notionhq/client-style calls. Requests go through the limiter.
 await client.databases.query({ database_id: '...' });
 await client.pages.create({ parent: { page_id: '...' }, properties: { ... } });
 await client.blocks.children.append({ block_id: '...', children: [...] });
